@@ -1,0 +1,6 @@
+applicationType: grpc
+defaultPackage: org.nitb.orchestrator2
+testFramework: junit
+sourceLanguage: kotlin
+buildTool: gradle_kotlin
+features: [annotation-api, app-name, consul, discovery-consul, gradle, grpc, jackson-databind, junit, kotlin, kotlin-application, kotlin-build, logback, micronaut-build, readme, shade, yaml]
