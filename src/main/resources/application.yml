@@ -1,8 +1,28 @@
 micronaut:
   application:
     name: orchestratorWorker
-consul:
-  client:
-    registration:
-      enabled: true
-    defaultZone: ${CONSUL_HOST:localhost}:${CONSUL_PORT:8500}
+jms:
+  activemq:
+    classic:
+      enabled: ${O2_MQ_ACTIVE_ENABLED:false}
+      connection-string: ${O2_MQ_CONN_STRING:}
+rabbitmq:
+  enabled: ${O2_MQ_RABBIT_ENABLED:false}
+  uri: ${O2_MQ_CONN_STRING:}
+  username: ${O2_MQ_USERNAME:}
+  password: ${O2_MQ_PASSWORD:}
+grpc.server.port: ${O2_GRPC_SERVER_PORT:8080}
+logger.levels.root: ${O2_LOGGER_LEVEL:INFO}
+orchestrator:
+  metrics:
+    print-task-list: ${O2_PRINT_TASK_LIST:false}
+  errors:
+    with-stack-trace: ${O2_ERRORS_WITH_STACK_TRACE:false}
+  mq:
+    type: ${O2_MQ_TYPE:rabbitmq}
+    manager.queue: ${O2_MQ_MANAGER_QUEUE:manager}
+  grpc:
+    reflection: ${O2_GRPC_REFLECTION:true}
+  security:
+    manager-token-enabled: ${O2_SECURITY_MANAGER_ENABLED:true}
+    manager-token: ${O2_SECURITY_MANAGER_TOKEN}

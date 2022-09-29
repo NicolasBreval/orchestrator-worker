@@ -1,36 +1,44 @@
 import com.google.protobuf.gradle.*
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+
+val kotlinVersion: String by System.getProperties()
+
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.6.21"
-    id("org.jetbrains.kotlin.kapt") version "1.6.21"
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.6.21"
+    id("org.jetbrains.kotlin.jvm") version "1.7.0"
+    id("org.jetbrains.kotlin.kapt") version "1.7.0"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.7.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("io.micronaut.application") version "3.5.1"
     id("com.google.protobuf") version "0.8.15"
+    id("net.nemerosa.versioning") version "2.7.1"
 }
 
-version = "0.1"
+version = "0.0.1"
 group = "org.nitb.orchestrator2"
 
-val kotlinVersion=project.properties.get("kotlinVersion")
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
     implementation("io.micronaut:micronaut-jackson-databind")
-    implementation("io.micronaut.discovery:micronaut-discovery-client")
     implementation("io.micronaut.grpc:micronaut-grpc-runtime")
     implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
     implementation("jakarta.annotation:jakarta.annotation-api")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
-    runtimeOnly("ch.qos.logback:logback-classic")
     implementation("io.micronaut:micronaut-validation")
+    implementation("io.micronaut.jms:micronaut-jms-activemq-classic")
+    implementation("io.micronaut.rabbitmq:micronaut-rabbitmq")
+    implementation("io.grpc:grpc-services:1.49.1")
+    implementation("org.nitb.orchestrator2:orchestrator-task-base:0.0.1")
 
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
+    runtimeOnly("ch.qos.logback:logback-classic")
 
     testImplementation("io.micronaut:micronaut-http-client")
-
 }
 
 
@@ -50,6 +58,21 @@ tasks {
     compileTestKotlin {
         kotlinOptions {
             jvmTarget = "17"
+        }
+    }
+    jar {
+        manifest {
+            attributes (mapOf(
+                "Version" to "${project.version}",
+                "Built-By" to "nicolasbrevalrodriguez@gmail.com",
+                "Build-Timestamp" to DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(OffsetDateTime.now()),
+                "Build-Revision" to versioning.info.commit,
+                "Created-By" to "Gradle ${gradle.gradleVersion}",
+                "Build-Jdk" to "${System.getProperties()["java.version"]} (${System.getProperties()["java.vendor"]} ${System.getProperties()["java.vm.version"]})",
+                "Build-OS" to "${System.getProperties()["os.name"]} ${System.getProperties()["os.arch"]} ${System.getProperties()["os.version"]}",
+                "Main-Class" to "${application.mainClass}",
+                "Class-Path" to configurations.runtimeClasspath.get().files.joinToString(" ") { it.name }
+            ))
         }
     }
 }
@@ -87,6 +110,4 @@ micronaut {
         annotations("org.nitb.orchestrator2.*")
     }
 }
-
-
 

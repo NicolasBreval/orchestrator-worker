@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.nitb.orchestrator2.model";
+
+package org.nitb.orchestrator2;
+
+message Task {
+    string name = 1;
+    string parameters = 2;
+    string type = 3;
+}

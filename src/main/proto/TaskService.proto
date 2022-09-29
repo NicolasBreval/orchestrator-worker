@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+import "Task.proto";
+import "google/protobuf/empty.proto";
+
+option java_multiple_files = true;
+option java_package = "org.nitb.orchestrator2.service";
+
+package org.nitb.orchestrator2;
+
+service TaskService {
+    rpc AddTasks(TaskDefinitionList) returns (TaskResult) {}
+
+    rpc RemoveTasks(TaskServiceNameList) returns (TaskResult) {}
+
+    rpc StopTasks(TaskServiceNameList) returns (TaskResult) {}
+
+    rpc StartTasks(TaskServiceNameList) returns (TaskResult) {}
+
+    rpc GetWorkerInfo(google.protobuf.Empty) returns (WorkerInfo) {}
+
+    rpc Shutdown(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+}
+
+message TaskDefinitionList {
+    repeated Task task_list = 1;
+}
+
+message TaskServiceNameList {
+    repeated string names = 1;
+}
+
+message TaskError {
+    string task = 1;
+    string error = 2;
+    string message = 3;
+}
+
+message TaskResult {
+    repeated string success = 1;
+    repeated TaskError errors = 2;
+}
+
+message TaskInfo {
+    string type = 1;
+    string name = 2;
+    string parameters = 3;
+}
+
+message WorkerInfo {
+    string name = 1;
+    repeated TaskInfo active_tasks = 2;
+    repeated TaskInfo disabled_tasks = 3;
+    int32 cpu_number = 4;
+    int64 available_memory = 5;
+    double server_cpu_usage = 6;
+    double system_cpu_usage = 7;
+    string os_arch = 8;
+    string os_version = 9;
+    string worker_version = 10;
+    string build_revision = 11;
+}
+
