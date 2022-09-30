@@ -1,6 +1,5 @@
 syntax = "proto3";
 
-import "Task.proto";
 import "google/protobuf/empty.proto";
 
 option java_multiple_files = true;
@@ -20,6 +19,12 @@ service TaskService {
     rpc GetWorkerInfo(google.protobuf.Empty) returns (WorkerInfo) {}
 
     rpc Shutdown(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+}
+
+message Task {
+    string name = 1;
+    string parameters = 2;
+    string type = 3;
 }
 
 message TaskDefinitionList {
