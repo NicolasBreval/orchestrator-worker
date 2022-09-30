@@ -2,7 +2,7 @@ micronaut:
   server:
     port: ${O2_SERVER_PORT}
   application:
-    name: orchestratorWorker
+    name: ${O2_SERVER_NAME}
 jms:
   activemq:
     classic:
