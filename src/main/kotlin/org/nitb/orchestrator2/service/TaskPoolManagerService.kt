@@ -162,20 +162,27 @@ class TaskPoolManagerService(
     @Throws(JsonProcessingException::class, JsonMappingException::class, ImpossibleRemoveTaskException::class, ImpossibleAddTaskException::class)
     private fun addNewTask(definition: Task) {
         val parameters = jsonMapper.readValue(definition.parameters, object : TypeReference<Map<String, Any?>>() {})
+        var update = true
 
         val newTask = if (taskPool.containsKey(definition.name)) { // If already exists a task with same name, tries to update it
-            try {
-                applicationContext.destroyBean(taskPool[definition.name]!!.bean!!)
-            } catch (e: Exception) {
-                throw ImpossibleRemoveTaskException("Error removing task '${definition.name}' for update", e)
-            }
+            if (taskPool[definition.name]?.parameters != parameters) {
+                try {
+                    applicationContext.destroyBean(taskPool[definition.name]!!.bean!!)
+                } catch (e: Exception) {
+                    throw ImpossibleRemoveTaskException("Error removing task '${definition.name}' for update", e)
+                }
 
-            try {
-                taskBuilder.newTask(definition.type, definition.name, parameters)
-            } catch (e: Exception) {
-                // If new definition of task is not correct and produces an exception during their creation, re-creates old version
-                taskBuilder.newTask(taskPool[definition.name]!!.type, definition.name, taskPool[definition.name]!!.parameters)
-                throw ImpossibleAddTaskException("Error to update task '${definition.name}'", e)
+                try {
+                    taskBuilder.newTask(definition.type, definition.name, parameters)
+                } catch (e: Exception) {
+                    // If new definition of task is not correct and produces an exception during their creation, re-creates old version
+                    taskBuilder.newTask(taskPool[definition.name]!!.type, definition.name, taskPool[definition.name]!!.parameters)
+                    throw ImpossibleAddTaskException("Error to update task '${definition.name}'", e)
+                }
+            } else {
+                update = false
+                logger.info("Nothing change to apply to task '${definition.name}'")
+                taskPool[definition.name]?.bean
             }
         } else {
             try {
@@ -185,7 +192,8 @@ class TaskPoolManagerService(
             }
         }
 
-        taskPool[definition.name] = TaskDefinition(definition.type, definition.name, parameters, definition.parameters, newTask)
+        if (update)
+            taskPool[definition.name] = TaskDefinition(definition.type, definition.name, parameters, definition.parameters, newTask)
     }
 
     @Throws(ImpossibleRemoveTaskException::class)
