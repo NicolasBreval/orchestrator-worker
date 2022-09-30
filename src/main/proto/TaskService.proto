@@ -49,15 +49,17 @@ message TaskInfo {
 
 message WorkerInfo {
     string name = 1;
-    repeated TaskInfo active_tasks = 2;
-    repeated TaskInfo disabled_tasks = 3;
-    int32 cpu_number = 4;
-    int64 available_memory = 5;
-    double server_cpu_usage = 6;
-    double system_cpu_usage = 7;
-    string os_arch = 8;
-    string os_version = 9;
-    string worker_version = 10;
-    string build_revision = 11;
+    string server_name = 2;
+    int32 server_port = 3;
+    repeated TaskInfo active_tasks = 4;
+    repeated TaskInfo disabled_tasks = 5;
+    int32 cpu_number = 6;
+    int64 available_memory = 7;
+    double server_cpu_usage = 8;
+    double system_cpu_usage = 9;
+    string os_arch = 10;
+    string os_version = 11;
+    string worker_version = 12;
+    string build_revision = 13;
 }
 

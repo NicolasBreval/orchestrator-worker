@@ -5,10 +5,13 @@ import java.lang.management.ManagementFactory
 import com.sun.management.OperatingSystemMXBean
 import org.nitb.orchestrator2.service.WorkerInfo
 import org.nitb.orchestrator2.util.StaticInfoResolver
+import java.net.InetAddress
 
 @Introspected
 data class WorkerInfo(
     val name: String,
+    var serverName: String?,
+    val serverPort: Int,
     val activeTasks: List<TaskInfo>,
     val disabledTasks: List<TaskInfo>,
     val cpuNumber: Int = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java).availableProcessors,
@@ -21,7 +24,10 @@ data class WorkerInfo(
     val buildRevision: String? = StaticInfoResolver.manifestProperties?.getValue("Build-Revision")
 ) {
     fun toGrpc(): WorkerInfo {
-        return WorkerInfo.newBuilder().setName(name)
+        return WorkerInfo.newBuilder()
+            .setName(name)
+            .setServerName(serverName)
+            .setServerPort(serverPort)
             .addAllActiveTasks(activeTasks.map { it.toGrpc() })
             .addAllDisabledTasks(disabledTasks.map { it.toGrpc() })
             .setCpuNumber(cpuNumber)
@@ -30,8 +36,14 @@ data class WorkerInfo(
             .setSystemCpuUsage(systemCpuUsage)
             .setOsArch(osArch)
             .setOsVersion(osVersion)
-            .setWorkerVersion(workerVersion)
-            .setBuildRevision(buildRevision)
+            .setWorkerVersion(workerVersion ?: "")
+            .setBuildRevision(buildRevision ?: "")
             .build()
+    }
+
+    init {
+        if (serverName == null) {
+            serverName = InetAddress.getLocalHost().hostName
+        }
     }
 }

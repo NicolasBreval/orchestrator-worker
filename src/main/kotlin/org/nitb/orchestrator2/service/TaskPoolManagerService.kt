@@ -23,7 +23,9 @@ import java.util.concurrent.ConcurrentHashMap
 @Singleton
 class TaskPoolManagerService(
     @Value("\${orchestrator.errors.with-stack-trace}") private val errorsWithStackTrace: Boolean,
-    @Value("\${orchestrator.metrics.print-task-list}") private val printTaskList: Boolean
+    @Value("\${orchestrator.metrics.print-task-list}") private val printTaskList: Boolean,
+    @Value("\${grpc.server.port}") private val serverPort: Int,
+    @Value("\${micronaut.application.name}") private val serverName: String?
 ) {
 
     fun addTasks(definitions: TaskDefinitionList): TaskResult {
@@ -126,7 +128,7 @@ class TaskPoolManagerService(
             val activeTasks = it[false]?.map { task -> task.value.toTaskInfo() } ?: listOf()
             val disabledTasks = it[true]?.map { task -> task.value.toTaskInfo() } ?: listOf()
 
-            mqManager.send(workerName, managerQueue, WorkerInfo(workerName, activeTasks, disabledTasks))
+            mqManager.send(workerName, managerQueue, WorkerInfo(workerName, serverName, serverPort, activeTasks, disabledTasks))
         }
     }
 
@@ -140,7 +142,7 @@ class TaskPoolManagerService(
         val activeTasks = it[false]?.map { task -> task.value.toTaskInfo() } ?: listOf()
         val disabledTasks = it[true]?.map { task -> task.value.toTaskInfo() } ?: listOf()
 
-        WorkerInfo(workerName, activeTasks, disabledTasks)
+        WorkerInfo(workerName, serverName, serverPort, activeTasks, disabledTasks)
     }
 
     @Inject
