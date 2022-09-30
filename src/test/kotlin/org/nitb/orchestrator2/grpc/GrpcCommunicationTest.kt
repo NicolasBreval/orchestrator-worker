@@ -14,8 +14,7 @@ import org.nitb.orchestrator2.bean.TaskServiceClientGenerator
 @Property(name = "O2_MQ_RABBIT_ENABLED", value = "true")
 @Property(name = "O2_SECURITY_MANAGER_ENABLED", value = "false")
 class GrpcCommunicationTest(
-    @Value("grpc.server.port") private val serverPort: Int,
-    @Value("micronaut.application.name") private val serverName: String
+    @Value("grpc.server.port") private val serverPort: Int
 ) {
 
     @Test
