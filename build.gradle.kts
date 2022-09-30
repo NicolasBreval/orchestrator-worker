@@ -39,7 +39,6 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
 
     testImplementation("io.micronaut:micronaut-http-client")
-    testImplementation("io.micronaut.grpc:micronaut-grpc-client-runtime")
     testImplementation("com.github.fridujo:rabbitmq-mock:1.1.1")
 }
 
