@@ -5,9 +5,9 @@ import java.time.format.DateTimeFormatter
 val kotlinVersion: String by System.getProperties()
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.7.0"
-    id("org.jetbrains.kotlin.kapt") version "1.7.0"
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.7.0"
+    id("org.jetbrains.kotlin.jvm") version "1.7.10"
+    id("org.jetbrains.kotlin.kapt") version "1.7.10"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.7.10"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("io.micronaut.application") version "3.5.1"
     id("com.google.protobuf") version "0.8.15"
@@ -39,6 +39,8 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
 
     testImplementation("io.micronaut:micronaut-http-client")
+    testImplementation("io.micronaut.grpc:micronaut-grpc-client-runtime")
+    testImplementation("com.github.fridujo:rabbitmq-mock:1.1.1")
 }
 
 
