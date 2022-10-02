@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Value
 import io.micronaut.scheduling.annotation.Scheduled
 import jakarta.inject.Inject
@@ -20,6 +21,7 @@ import java.net.InetAddress
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
+@Context
 @Singleton
 class TaskPoolManagerService(
     @Value("\${orchestrator.errors.with-stack-trace}") private val errorsWithStackTrace: Boolean,
