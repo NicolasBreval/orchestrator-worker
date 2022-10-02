@@ -37,7 +37,7 @@ class TaskPoolManagerService(
 
         definitions.taskListList.forEach { taskDefinition ->
             try {
-                addNewTask(taskDefinition)
+                addNewTask(taskDefinition, definitions.targetWorker)
                 successList.add(taskDefinition.name)
             } catch (e: Exception) {
                 when (e) {
@@ -166,11 +166,12 @@ class TaskPoolManagerService(
     private lateinit var managerQueue: String
 
     @Throws(JsonProcessingException::class, JsonMappingException::class, ImpossibleRemoveTaskException::class, ImpossibleAddTaskException::class)
-    private fun addNewTask(definition: Task) {
+    private fun addNewTask(definition: Task, targetWorker: String) {
         val parameters = jsonMapper.readValue(definition.parameters, object : TypeReference<Map<String, Any?>>() {})
         var update = true
 
-        val newTask = if (taskPool.containsKey(definition.name)) { // If already exists a task with same name, tries to update it
+        val newTask = if (targetWorker == workerName) null
+        else if (taskPool.containsKey(definition.name)) { // If already exists a task with same name, tries to update it
             if (taskPool[definition.name]?.parameters != parameters) {
                 try {
                     applicationContext.destroyBean(taskPool[definition.name]!!.bean!!)
@@ -230,11 +231,11 @@ class TaskPoolManagerService(
 
     @Throws(ImpossibleStartTaskException::class)
     private fun startTask(taskName: String) {
-        val task = taskPool[taskName]
+        val task = taskPool[taskName] ?: throw ImpossibleStartTaskException("Not exists any task with name '$taskName'")
 
-        if (task?.bean != null && task.bean.status == TaskStatus.STOPPED) {
+        if (task.bean == null || task.bean.status == TaskStatus.STOPPED) {
             try {
-                addNewTask(Task.newBuilder().setName(task.name).setType(task.type).setParameters(task.strParameters).build())
+                addNewTask(Task.newBuilder().setName(task.name).setType(task.type).setParameters(task.strParameters).build(), workerName)
             } catch (e: Exception) {
                 throw ImpossibleStartTaskException("Error starting task's bean of '$taskName'", e)
             }

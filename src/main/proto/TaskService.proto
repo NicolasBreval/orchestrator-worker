@@ -29,6 +29,7 @@ message Task {
 
 message TaskDefinitionList {
     repeated Task task_list = 1;
+    string target_worker = 2;
 }
 
 message TaskServiceNameList {
