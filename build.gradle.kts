@@ -61,6 +61,10 @@ tasks {
             jvmTarget = "17"
         }
     }
+    test {
+        useJUnit()
+        useJUnitPlatform()
+    }
     jar {
         manifest {
             attributes (mapOf(
