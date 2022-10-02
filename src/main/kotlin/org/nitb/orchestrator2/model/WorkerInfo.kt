@@ -9,7 +9,7 @@ import org.nitb.orchestrator2.util.StaticInfoResolver
 @Introspected
 data class WorkerInfo(
     val name: String,
-    val serverName: String?,
+    val serverName: String,
     val serverPort: Int,
     val activeTasks: List<TaskInfo>,
     val disabledTasks: List<TaskInfo>,
