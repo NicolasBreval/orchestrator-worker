@@ -5,12 +5,11 @@ import java.lang.management.ManagementFactory
 import com.sun.management.OperatingSystemMXBean
 import org.nitb.orchestrator2.service.WorkerInfo
 import org.nitb.orchestrator2.util.StaticInfoResolver
-import java.net.InetAddress
 
 @Introspected
 data class WorkerInfo(
     val name: String,
-    var serverName: String?,
+    val serverName: String?,
     val serverPort: Int,
     val activeTasks: List<TaskInfo>,
     val disabledTasks: List<TaskInfo>,
@@ -23,6 +22,7 @@ data class WorkerInfo(
     val workerVersion: String? = StaticInfoResolver.manifestProperties?.getValue("Version"),
     val buildRevision: String? = StaticInfoResolver.manifestProperties?.getValue("Build-Revision")
 ) {
+
     fun toGrpc(): WorkerInfo {
         return WorkerInfo.newBuilder()
             .setName(name)
@@ -41,9 +41,4 @@ data class WorkerInfo(
             .build()
     }
 
-    init {
-        if (serverName == null) {
-            serverName = InetAddress.getLocalHost().hostName
-        }
-    }
 }

@@ -16,6 +16,7 @@ import org.nitb.orchestrator2.task.enums.TaskStatus
 import org.nitb.orchestrator2.task.mq.impl.MQManager
 import org.nitb.orchestrator2.task.util.TaskBuilder
 import org.slf4j.LoggerFactory
+import java.net.InetAddress
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -23,8 +24,9 @@ import java.util.concurrent.ConcurrentHashMap
 class TaskPoolManagerService(
     @Value("\${orchestrator.errors.with-stack-trace}") private val errorsWithStackTrace: Boolean,
     @Value("\${orchestrator.metrics.print-task-list}") private val printTaskList: Boolean,
-    @Value("\${grpc.server.port}") private val serverPort: Int,
-    @Value("\${micronaut.application.name}") private val serverName: String?
+    @Value("\${orchestrator.server.port}") private val serverPort: Int?,
+    @Value("\${orchestrator.server.name}") private val serverName: String?,
+    @Value("\${grpc.server.port}") private val defaultServerPort: Int
 ) {
 
     fun addTasks(definitions: TaskDefinitionList): TaskResult {
@@ -127,7 +129,8 @@ class TaskPoolManagerService(
             val activeTasks = it[false]?.map { task -> task.value.toTaskInfo() } ?: listOf()
             val disabledTasks = it[true]?.map { task -> task.value.toTaskInfo() } ?: listOf()
 
-            mqManager.send(workerName, managerQueue, WorkerInfo(workerName, serverName, serverPort, activeTasks, disabledTasks))
+            mqManager.send(workerName, managerQueue, WorkerInfo(workerName, serverName
+                ?: InetAddress.getLocalHost().hostName, serverPort ?: defaultServerPort, activeTasks, disabledTasks))
         }
     }
 
@@ -141,7 +144,8 @@ class TaskPoolManagerService(
         val activeTasks = it[false]?.map { task -> task.value.toTaskInfo() } ?: listOf()
         val disabledTasks = it[true]?.map { task -> task.value.toTaskInfo() } ?: listOf()
 
-        WorkerInfo(workerName, serverName, serverPort, activeTasks, disabledTasks)
+        WorkerInfo(workerName, serverName ?: InetAddress.getLocalHost().hostName,
+            serverPort ?: defaultServerPort, activeTasks, disabledTasks)
     }
 
     @Inject

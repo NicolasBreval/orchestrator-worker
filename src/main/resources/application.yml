@@ -14,6 +14,9 @@ rabbitmq:
 grpc.server.port: ${O2_GRPC_SERVER_PORT:8080}
 logger.levels.root: ${O2_LOGGER_LEVEL:INFO}
 orchestrator:
+  server:
+    name: ${O2_ORCHESTRATOR_SERVER_NAME}
+    port: ${O2_ORCHESTRATOR_SERVER_PORT}
   metrics:
     print-task-list: ${O2_PRINT_TASK_LIST:false}
   errors:
