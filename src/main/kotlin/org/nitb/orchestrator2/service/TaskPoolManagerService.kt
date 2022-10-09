@@ -207,7 +207,6 @@ class TaskPoolManagerService(
     private fun removeTask(taskName: String) {
         try {
             stopTask(taskName)
-
             taskPool.remove(taskName)
         } catch (e: Exception) {
             throw ImpossibleRemoveTaskException("Error removing task '$taskName'", e)
@@ -218,6 +217,8 @@ class TaskPoolManagerService(
     private fun stopTask(taskName: String) {
         val task = taskPool[taskName]
 
+        if (task?.bean == null)
+            logger.debug("Task '$taskName' wasn't initialized, so it's not necessary to stop it")
         if (task?.bean != null && task.bean.status != TaskStatus.STOPPED) {
             try {
                 applicationContext.destroyBean(task.bean)
