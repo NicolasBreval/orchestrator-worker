@@ -11,11 +11,10 @@ jobs:
           java-version: '17'
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Example step
-        run: |
-          ls -all
-          echo "GRAALVM_HOME: $GRAALVM_HOME"
-          echo "JAVA_HOME: $JAVA_HOME"
-          java --version
-          gu --version
-          native-image --version
+      - name: Build and test
+        run: ./gradlew clean build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: orchestrator-worker
+          path: ./build/libs/orchestrator-worker-*-all.jar
