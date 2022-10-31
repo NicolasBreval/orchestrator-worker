@@ -1,6 +1,7 @@
 import com.google.protobuf.gradle.*
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
+import java.net.URI
 
 val kotlinVersion: String by System.getProperties()
 
@@ -18,7 +19,9 @@ version = "0.0.1"
 group = "org.nitb.orchestrator2"
 
 repositories {
-    mavenLocal()
+    maven {
+        url = URI.create("https://jitpack.io")
+    }
     mavenCentral()
 }
 
@@ -33,7 +36,7 @@ dependencies {
     implementation("io.micronaut.jms:micronaut-jms-activemq-classic")
     implementation("io.micronaut.rabbitmq:micronaut-rabbitmq")
     implementation("io.grpc:grpc-services:1.49.2")
-    implementation("org.nitb.orchestrator2:orchestrator-task-base:0.0.1")
+    implementation("com.github.NicolasBreval:orchestrator-task-base:0.0.1")
 
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
     runtimeOnly("ch.qos.logback:logback-classic")
