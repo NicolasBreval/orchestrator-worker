@@ -132,7 +132,7 @@ class TaskPoolManagerService(
             val disabledTasks = it[true]?.map { task -> task.value.toTaskInfo() } ?: listOf()
 
             mqManager.send(workerName, managerQueue, WorkerInfo(workerName, serverName
-                ?: InetAddress.getLocalHost().hostName, serverPort ?: defaultServerPort, activeTasks, disabledTasks))
+                ?: InetAddress.getLocalHost().hostName, serverPort ?: defaultServerPort, activeTasks, disabledTasks), expiryTime = 30000L)
         }
     }
 
