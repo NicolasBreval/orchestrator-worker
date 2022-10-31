@@ -35,14 +35,14 @@ dependencies {
     implementation("io.micronaut:micronaut-validation")
     implementation("io.micronaut.jms:micronaut-jms-activemq-classic")
     implementation("io.micronaut.rabbitmq:micronaut-rabbitmq")
-    implementation("io.grpc:grpc-services:1.49.2")
+    implementation("io.grpc:grpc-services:1.50.2")
     implementation("com.github.NicolasBreval:orchestrator-task-base:0.0.1")
 
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
     runtimeOnly("ch.qos.logback:logback-classic")
 
     testImplementation("io.micronaut:micronaut-http-client")
-    testImplementation("com.github.fridujo:rabbitmq-mock:1.1.1")
+    testImplementation("com.github.fridujo:rabbitmq-mock:1.2.0")
 }
 
 
