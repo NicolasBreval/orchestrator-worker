@@ -1,5 +1,6 @@
 package org.nitb.orchestrator2.model
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import io.micronaut.core.annotation.Introspected
 import java.lang.management.ManagementFactory
 import com.sun.management.OperatingSystemMXBean
@@ -11,7 +12,9 @@ data class WorkerInfo(
     val name: String,
     val serverName: String,
     val serverPort: Int,
+    @JsonInclude(JsonInclude.Include.ALWAYS)
     val activeTasks: List<TaskInfo>,
+    @JsonInclude(JsonInclude.Include.ALWAYS)
     val disabledTasks: List<TaskInfo>,
     val cpuNumber: Int = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java).availableProcessors,
     val availableMemory: Long = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java).freeMemorySize,
