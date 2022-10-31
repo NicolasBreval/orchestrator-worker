@@ -12,17 +12,17 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("io.micronaut.application") version "3.5.1"
     id("com.google.protobuf") version "0.8.15"
-    id("net.nemerosa.versioning") version "2.7.1"
+    id("net.nemerosa.versioning") version "2.8.2"
 }
 
 version = "0.0.1"
 group = "org.nitb.orchestrator2"
 
 repositories {
+    mavenCentral()
     maven {
         url = URI.create("https://jitpack.io")
     }
-    mavenCentral()
 }
 
 dependencies {
